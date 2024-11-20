@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+{% load products_tags %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+		<!-- Start Hero Section -->
+        <div class="hero">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-lg-5">
+                        <div class="intro-excerpt">
+                            <h1>Ассортимент</h1>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div id="myBtnContainer" class="btn-container">
+                            {% for category in categories %}
+                            <a href="{% url "products:category-filter" category.slug %}">
+                                <button class="btn-filter {% if request.resolver_match.kwargs.category_slug == category.slug %}active{% endif %}">
+                                    {{ category.name }}
+                                </button>
+                            </a>
+                            {% endfor %}
+                        </div>                  
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    <!-- End Hero Section -->
+
+    
+
+    <div class="untree_co-section product-section before-footer-section">
+        <div class="container">
+            <div class="row ">
+
+                  <!-- Start Column 1 -->
+                {% for product in products %}
+                <div class="col-12 col-md-4 col-lg-3 mb-5">
+                    <a class="product-item" href="#">
+                        {% if product.image %}
+                        <div class="product-image-wrapper">
+                            <img src="{{ product.image.url }}" class="img-fluid product-thumbnail" alt="{{ product.title }}">
+                            {% if product.discount %}
+                            <span class="product-discount">-{{ product.discount }}%</span>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <img src="{% static "main/images/Not found image.png" %}" class="img-fluid product-thumbnail" alt="{{ product.title }}">
+                            {% if product.discount %}
+                            <span class="product-discount">-{{ product.discount }}%</span>
+                            {% endif %}
+                        {% endif %}
+                        <h3 class="product-title">{{ product.title }}</h3>
+                        <strong class="product-price">
+                            {% if product.discount %}
+                            <span class="original-price">${{ product.price }}</span>
+                            ${{ product.get_discounted_price }}
+                            {% else %}
+                            ${{ product.price }}
+                            {% endif %}
+                        </strong>
+                        <span class="icon-cross">
+                            <img src="{% static "main/images/cross.svg" %}" class="img-fluid">
+                        </span>
+                    </a>
+                </div>
+                {% endfor %}
+
+              </div>
+                <div class="d-flex justify-content-center">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                    <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                        <a class="page-link" href="{% if page_obj.has_previous %}?{% change_params page=page_obj.previous_page_number %}{% else %}#{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% for page in page_obj.paginator.page_range %}
+                    {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 %}
+                            <li class="page-item {% if page_obj.number == page %} active {% endif %}">
+                                <a class="page-link" href="?{% change_params page=page %}">{{ page }}</a>
+                            </li>
+                    {% endif %}
+                    {% endfor %}
+                    <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                        <a class="page-link" href="{% if page_obj.has_next %}?{% change_params page=page_obj.next_page_number %}{% else %}#{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    </ul>
+                </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция фильтрации элементов
+
+// Функция для добавления класса
+
+
+// Добавление активного класса к кнопке
+var btnContainer = document.getElementById("myBtnContainer");
+var btns = btnContainer.getElementsByClassName("btn-filter");
+for (var i = 0; i < btns.length; i++) {
+    btns[i].addEventListener("click", function() {
+        // Убираем активный класс с текущей кнопки
+        var current = document.getElementsByClassName("active");
+        if (current.length > 0) {
+            current[0].classList.remove("active");
+        }
+        // Добавляем активный класс на нажатую кнопку
+        this.classList.add("active");
+    });
+}
+
+    </script>
+
+{% endblock %}

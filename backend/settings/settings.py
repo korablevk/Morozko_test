@@ -32,7 +32,8 @@ INSTALLED_APPS = [
 
     "debug_toolbar",
 
-
+    "main",
+    "products",
 ]
 
 MIDDLEWARE = [
@@ -70,7 +71,7 @@ WSGI_APPLICATION = "settings.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+DEFAULT_PORT = 5432
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.postgresql',
@@ -78,7 +79,7 @@ DATABASES = {
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': int(os.environ.get('POSTGRES_PORT')),
+        'PORT': int(os.environ.get('POSTGRES_PORT',DEFAULT_PORT)),
     }
 }
 
