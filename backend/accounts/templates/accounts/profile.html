@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+{% load crispy_forms_tags %}
+
+<style>
+  .profile-container {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+  }
+  .profile-box {
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+  }
+  .profile-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .profile-box form {
+    margin-top: 20px;
+  }
+  .profile-box .btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+  }
+  .profile-box .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  .profile-box .form-control {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease;
+  }
+  .profile-box .form-control:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container profile-container">
+    <div class="profile-box">
+        <h2>Update Profile</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<!-- Footer content if needed -->
+{% endblock %}

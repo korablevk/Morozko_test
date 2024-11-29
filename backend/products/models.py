@@ -79,13 +79,17 @@ class Product(models.Model):
     price = models.DecimalField(
         "Цена", max_digits=7, decimal_places=2, default=99.99)
     image = models.ImageField(
-        "Изображение", upload_to='images/products/', default='products/products/default.jpeg')
+        "Изображение", upload_to='images/products/', blank=True, default='products/products/default.jpeg')
     quantity = models.PositiveIntegerField(default=0, verbose_name='Количество')
     available = models.BooleanField("Наличие", default=True)
     created_at = models.DateTimeField('Дата создания', auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField('Дата изменения', auto_now=True)
     discount = models.IntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    temperature = models.JSONField(default=dict(), blank=True, verbose_name='Температура')
+    dimensions = models.JSONField(default=dict(), blank=True, verbose_name='Габариты')
+    cooled_volume = models.PositiveIntegerField(default=0, blank=True, verbose_name='Охлаждаемый объём')
+    energy_consumption = models.DecimalField(default=0.00, max_digits=4, decimal_places=2, blank=True, verbose_name='Энергопотребление в кВт')
     
     class Meta:
         verbose_name = 'Продукт'
@@ -96,7 +100,7 @@ class Product(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("shop:product-detail", args=[str(self.slug)])
+        return reverse("products:product-detail", args=[str(self.slug)])
 
     def get_discounted_price(self):
         """

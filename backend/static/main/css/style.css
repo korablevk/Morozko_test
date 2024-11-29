@@ -980,7 +980,7 @@ textarea {
 }
 
 .site-blocks-table thead th {
-  padding: 30px;
+  padding: 25px;
   text-align: center;
   border-width: 0px !important;
   vertical-align: middle;
@@ -1220,4 +1220,62 @@ textarea {
   color: #6c757d;
   font-size: 14px;
   margin-right: 5px;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #eff2f1;
+  padding: 20px;
+  /* Added padding to avoid edge overflow on smaller screens */
+}
+
+.login-box {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px;
+  /* Increased padding for better spacing */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-box h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  /* Increased spacing below heading */
+  font-weight: 600;
+  color: #27637f;
+}
+
+.login-box .form-control {
+  border-radius: 10px;
+  padding: 10px;
+  /* Added padding inside input fields */
+}
+
+.login-box .btn-primary {
+  background: #27637f;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  /* Enhanced padding for better clickability */
+  font-weight: 600;
+  width: 100%;
+  /* Button takes full width */
+}
+
+.login-box .btn-primary:hover {
+  background: #314d43;
+}
+
+.login-box a {
+  text-decoration: underline;
+  color: #27637f;
+}
+
+.login-box a:hover {
+  color: #314d43;
 }

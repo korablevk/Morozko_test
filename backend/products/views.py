@@ -1,13 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from .models import Category, ProductProxy
 
-
-# def products_view(request):
-#     products = ProductProxy.objects.all()
-#     return render(request, 'shop/catalog.html', {'products': products})
 
 class ProductListView(ListView):
     model = ProductProxy
@@ -32,6 +28,16 @@ class ProductListView(ListView):
         return context
 
 
+class ProductView(DetailView):
+    model = ProductProxy
+    template_name = "products/product.html"
+    slug_url_kwarg = "product_slug"
+    context_object_name = "product"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = self.object.title
+        return context
 
 # def products_detail_view(request, slug):
 #     product = get_object_or_404(

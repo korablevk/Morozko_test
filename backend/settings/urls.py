@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
+from django_email_verification import urls as email_urls
 
 from settings import settings
 
@@ -24,6 +25,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('main.urls', namespace='main')),
     path('shop/', include('products.urls', namespace='products')),
+    path('cart/', include('cart.urls', namespace='cart')),
+    path('account/', include('accounts.urls', namespace='account')),
+    path('email/', include(email_urls), name='email-verification'),
 ]
 
 if settings.DEBUG:
