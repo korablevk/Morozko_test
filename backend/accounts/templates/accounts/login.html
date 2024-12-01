@@ -18,7 +18,7 @@
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
           <div class="text-center d-flex flex-row mb-3">
-            <a href="/reset-password"><div class="p-2">Forgot Password?</div></a>
+            <a href="{% url 'account:password_reset' %}"><div class="p-2">Forgot Password?</div></a>
             <a href="{% url "account:register" %}"><div class="p-2">Register</div></a>
           </div>
         </form>
