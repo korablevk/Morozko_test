@@ -9,6 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django_email_verification import send_email
 
+from cart.models import Cart
+
 from .forms import ProfileForm, UserRegistrationForm, UserLoginForm
 from .models import User
 
@@ -26,12 +28,20 @@ class UserLoginView(LoginView):
     def form_valid(self, form):
         # When the form is valid, the user is logged in.
         # You can customize the redirect URL if necessary.
+        session_key = self.request.session.session_key
         user = form.get_user()
 
         if user:
             auth.login(self.request, user)
-            messages.success(self.request, "Successfully logged in!")
-            return HttpResponseRedirect(self.get_success_url())
+            if session_key:
+                # delete old authorized user carts
+                forgot_carts = Cart.objects.filter(user=user)
+                if forgot_carts.exists():
+                    forgot_carts.delete()
+                # add new authorized user carts from anonimous session
+                Cart.objects.filter(session_key=session_key).update(user=user)
+                messages.success(self.request, "Successfully logged in!")
+                return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
         # When the form is invalid (invalid username or password)
@@ -46,6 +56,7 @@ class UserRegistrationView(CreateView):
     success_url = reverse_lazy('account:email_verification_sent')
 
     def form_valid(self, form):
+        session_key = self.request.session.session_key
         user = form.save(commit=False)
         user_email = form.cleaned_data.get('email')
         user_username = form.cleaned_data.get('username')
@@ -58,6 +69,9 @@ class UserRegistrationView(CreateView):
         user.is_active = False
 
         send_email(user)
+
+        if session_key:
+            Cart.objects.filter(session_key=session_key).update(user=user)
 
         return HttpResponseRedirect(self.success_url)
 
@@ -84,3 +98,7 @@ def logout(request):
     messages.success(request, f"{request.user.username}, Вы вышли из аккаунта")
     auth.logout(request)
     return redirect(reverse('main:index'))
+
+
+class UserCartView(TemplateView):
+    template_name = 'accounts/accounts_cart.html'

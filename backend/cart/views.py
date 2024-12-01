@@ -1,80 +1,69 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render
-from django.views import View
 from django.template.loader import render_to_string
-
-from decimal import Decimal
+from django.urls import reverse
+from django.views import View
+from cart.mixins import CartMixin
+from cart.models import Cart
+from cart.utils import get_user_carts
 
 from products.models import ProductProxy
-from .cart import Cart
 
 
-class CartView(View):
-    """Displays the cart."""
-    def get(self, request):
-        cart = Cart(request)
-        context = {
-            'cart': cart
+class CartAddView(CartMixin, View):
+    def post(self, request):
+        product_id = request.POST.get("product_id")
+        product = ProductProxy.objects.get(id=product_id)
+
+        cart = self.get_cart(request, product=product)
+
+        if cart:
+            cart.quantity += 1
+            cart.save()
+        else:
+            Cart.objects.create(user=request.user if request.user.is_authenticated else None,
+                                session_key=request.session.session_key if not request.user.is_authenticated else None,
+                                product=product, quantity=1)
+        
+        response_data = {
+            "message": "Товар добавлен в корзину",
+            'cart_items_html': self.render_cart(request)
         }
-        return render(request, 'cart/cart-view.html', context)
+
+        return JsonResponse(response_data)
 
 
-class CartAddView(View):
-    """Handles adding a product to the cart."""
+class CartUpdateView(CartMixin, View):
     def post(self, request):
-        if request.POST.get('action') == 'post':
-            cart = Cart(request)
+        cart_id = request.POST.get("cart_id")
+        
+        cart = self.get_cart(request, cart_id=cart_id)
 
-            product_id = int(request.POST.get('product_id'))
-            product_qty = 1  
+        cart.quantity = request.POST.get("quantity")
+        cart.save()
 
-            product = get_object_or_404(ProductProxy, id=product_id)
+        quantity = cart.quantity
 
-            cart.add(product=product, quantity=product_qty)
+        response_data = {
+            "message": "Количество изменено",
+            "quantity": quantity,
+            'cart_items_html': self.render_cart(request)
+        }
 
-            cart_qty = cart.__len__()
-
-            return JsonResponse({'qty': cart_qty, 'product': product.title})
+        return JsonResponse(response_data)
 
 
-class CartDeleteView(View):
-    """Handles deleting a product from the cart."""
+class CartDeleteView(CartMixin, View):
     def post(self, request):
-        if request.POST.get('action') == 'post':
-            cart = Cart(request)
-
-            product_id = request.POST.get('product_id')
-            if product_id is None:
-                return JsonResponse({'error': 'Product ID is missing'}, status=400)
-
-            try:
-                product_id = int(product_id)
-                cart.delete(product=product_id)
-
-                cart_qty = cart.__len__()
-                cart_total = cart.get_total_price()
-
-                return JsonResponse({'qty': cart_qty, 'total': cart_total})
-
-            except ValueError:
-                return JsonResponse({'error': 'Invalid product ID'}, status=400)
-
-
-class CartUpdateView(View):
-    def post(self, request, *args, **kwargs):
-        cart_id = request.POST.get('cart_id')
-        quantity = int(request.POST.get('quantity'))
+        cart_id = request.POST.get("cart_id")
         
+        cart = self.get_cart(request, cart_id=cart_id)
+        quantity = cart.quantity
+        cart.delete()
 
-        cart = Cart(request)
-        
-        cart.update(cart_id, quantity)
-        
-        updated_item = cart.cart[cart_id]
+        response_data = {
+            "message": "Товар удален из корзины",
+            "quantity_deleted": quantity,
+            'cart_items_html': self.render_cart(request)
+        }
 
-        return JsonResponse({
-            'quantity': updated_item['quantity'],
-            'cart_total': str(cart.get_total_price())
-        })
-    
-        
+        return JsonResponse(response_data)

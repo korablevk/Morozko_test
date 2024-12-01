@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "main",
     "products",
     "cart",
+    "orders",
     "accounts",
 ]
 
@@ -68,8 +69,6 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
 
-
-                'cart.context_processors.cart',
             ],
         },
     },
@@ -149,6 +148,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'accounts.User'
+LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 

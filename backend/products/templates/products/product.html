@@ -33,7 +33,10 @@
                 </button>
             </div>
             <div id="cart-info">
-                <p>Товаров в корзине: <span id="cart-qty">0</span></p>
+                <p>Товаров в корзине: <span id="cart-qty">
+                    {% user_carts request as cart %}
+					{{ cart.total_quantity }}
+                </span></p>
             </div>
             
             

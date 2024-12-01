@@ -1,6 +1,7 @@
 {% load static %}
 {% load cache %}
 {% load products_tags %}
+{% load carts_tags %}
 
 <!doctype html>
 <html lang="en">
@@ -68,18 +69,11 @@
 							</ul>
 						</li>
 						{% endif %}
-						<li><a class="nav-link" href="{% url "cart:index" %}">
+						<li><a class="nav-link" href="{% url "account:users_cart" %}">
 							<img src="{% static "main/images/cart.svg" %}">
 							<span id="lblCartCount" class="badge badge-warning ">
-
-								{% with cart_qty=cart|length%}
-								{% if cart_qty > 0 %}
-								{{cart_qty}}
-								{% else %}
-								0
-								{% endif %}
-	
-								{% endwith %}
+								{% user_carts request as cart %}
+								{{ cart.total_quantity }}
 							</span>
 						</a></li>
 					</ul>
