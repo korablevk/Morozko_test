@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Заголовок с большим отступом -->
+  <h1 class="text-center mb-5" style="margin-top: 50px;">Контакты</h1>
+  
+  <div class="row m-4">
+    <!-- Контактная информация -->
+    <div class="col-md-6">
+      <h2 class="mb-4">Наши контакты</h2>
+      <p><i class="fas fa-map-marker-alt"></i> Адрес: г. Москва, ул. Примерная, д. 1</p>
+      <p><i class="fas fa-phone"></i> Телефон: <a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+      <p><i class="fas fa-envelope"></i> Email: <a href="mailto:info@morozo.ru">info@morozo.ru</a></p>
+      <p><i class="fas fa-clock"></i> Режим работы: Пн-Пт с 9:00 до 18:00</p>
+    </div>
+
+    <!-- Карта -->
+    <div class="col-md-6">
+      <h2 class="mb-4">Как нас найти</h2>
+      <div class="embed-responsive embed-responsive-16by9">
+        <iframe 
+          class="embed-responsive-item" 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2244.953909947976!2d37.62250431567319!3d55.75321598055342!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x414abac3cc30c9e7%3A0x51d5af0e5f6eec7a!2z0JzQuNGA0L3QsNC60LAg0JzQuNC90YHRgtCw!5e0!3m2!1sru!2sru!4v1638214068033!5m2!1sru!2sru" 
+          width="100%" 
+          height="450" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -45,10 +45,8 @@
 							<a class="nav-link" href="{% url "main:index" %}">Домой</a>
 						</li>
 						<li><a class="nav-link" href="{% url "products:shop" %}">Магазин</a></li>
-						<li><a class="nav-link" href="about.html">О нас</a></li>
-						<li><a class="nav-link" href="services.html">Сервисы</a></li>
-						<li><a class="nav-link" href="blog.html">Блог</a></li>
-						<li><a class="nav-link" href="contact.html">Контакты</a></li>
+						<li><a class="nav-link" href="{% url "blog:index" %}">Блог</a></li>
+						<li><a class="nav-link" href="{% url "main:contacts" %}">Контакты</a></li>
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
@@ -73,7 +71,7 @@
 							<img src="{% static "main/images/cart.svg" %}">
 							<span id="lblCartCount" class="badge badge-warning ">
 								{% user_carts request as cart %}
-								{{ cart.total_quantity }}
+								{{ cart.total_quantity|default:"0" }}
 							</span>
 						</a></li>
 					</ul>

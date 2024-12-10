@@ -35,12 +35,15 @@ INSTALLED_APPS = [
     'crispy_forms',
     "crispy_bootstrap5",
     'django_email_verification',
+    'django_celery_beat',
+    'django_celery_results',
 
     "main",
     "products",
     "cart",
     "orders",
     "accounts",
+    "blog",
 ]
 
 MIDDLEWARE = [

@@ -7,6 +7,24 @@
 {% endblock %}
 
 {% block content %}
+<style>
+  .input-group {
+    position: relative;
+}
+
+.input-group-text {
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-left: none;
+    display: flex;
+    align-items: center;
+}
+
+.input-group input {
+    border-right: none;
+}
+
+</style>
 <div class="container">
     <div class="login-container">
       <div class="login-box">
@@ -25,6 +43,25 @@
       </div>
     </div>
   </div>  
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordInput = document.getElementById("id_password");
+        const togglePassword = document.getElementById("toggle-password");
+        const icon = togglePassword.querySelector("i");
+
+        togglePassword.addEventListener("click", function () {
+            // Переключение типа поля
+            const isPassword = passwordInput.type === "password";
+            passwordInput.type = isPassword ? "text" : "password";
+
+            // Смена иконки
+            icon.classList.toggle("fa-eye");
+            icon.classList.toggle("fa-eye-slash");
+        });
+    });
+</script>
+
 {% endblock %}
 
 

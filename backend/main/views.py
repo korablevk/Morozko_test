@@ -10,3 +10,8 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Morozko - Главная'
         return context
+
+
+class ContactsView(TemplateView):
+    template_name = 'main/contacts.html'
+

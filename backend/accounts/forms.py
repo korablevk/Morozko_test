@@ -11,7 +11,7 @@ class UserLoginForm(AuthenticationForm):
         fields = ['username', 'password']
 
     username = forms.CharField()
-    password = forms.CharField()
+    password = forms.PasswordInput()
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -52,7 +52,6 @@ class UserRegistrationForm(UserCreationForm):
     )
 
 
-
 class ProfileForm(UserChangeForm):
     class Meta:
         model = User
@@ -60,9 +59,12 @@ class ProfileForm(UserChangeForm):
             "first_name",
             "last_name",
             "username",
-            "email",)
+            "email",
+        )
 
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    username = forms.CharField()
-    email = forms.CharField()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Удаляем поле пароля из формы
+        if 'password' in self.fields:
+            self.fields['password'].widget = forms.HiddenInput()
+            self.fields['password'].required = False
