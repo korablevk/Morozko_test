@@ -28,27 +28,27 @@ class UserRegistrationForm(UserCreationForm):
 
     first_name = forms.CharField(
         required=True,
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter your first name"})
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Введите ваше имя"})
     )
     last_name = forms.CharField(
         required=True,
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter your last name"})
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Введите вашу фамилию"})
     )
     username = forms.CharField(
         required=True,
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Choose a username"})
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Выберите псевдоним"})
     )
     email = forms.EmailField(
         required=True,
-        widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "Enter your email"})
+        widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "Введите почту"})
     )
     password1 = forms.CharField(
         required=True,
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Enter a password"})
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Введите пароль"})
     )
     password2 = forms.CharField(
         required=True,
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Confirm your password"})
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Подтвердите пароль"})
     )
 
 

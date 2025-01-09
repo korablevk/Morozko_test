@@ -41,12 +41,15 @@
 
 				<div class="collapse navbar-collapse" id="navbarsFurni">
 					<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-						<li class="nav-item active">
-							<a class="nav-link" href="{% url "main:index" %}">Домой</a>
+						<li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+							<a class="nav-link" href="{% url 'main:index' %}">Домой</a>
 						</li>
-						<li><a class="nav-link" href="{% url "products:shop" %}">Магазин</a></li>
-						<li><a class="nav-link" href="{% url "blog:index" %}">Блог</a></li>
-						<li><a class="nav-link" href="{% url "main:contacts" %}">Контакты</a></li>
+						<li class="nav-item {% if request.resolver_match.url_name == 'shop' %}active{% endif %}">
+							<a class="nav-link" href="{% url 'products:shop' %}">Магазин</a>
+						</li>
+						<li class="nav-item {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}">
+							<a class="nav-link" href="{% url 'main:contacts' %}">Контакты</a>
+						</li>
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">

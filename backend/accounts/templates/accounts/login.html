@@ -28,16 +28,16 @@
 <div class="container">
     <div class="login-container">
       <div class="login-box">
-        <h2>Login</h2>
+        <h2>Логин</h2>
         <form method="post">
           {% csrf_token %}
           {{ form|crispy }}
           <div class="button-container">
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary">Логин</button>
           </div>
           <div class="text-center d-flex flex-row mb-3">
-            <a href="{% url 'account:password_reset' %}"><div class="p-2">Forgot Password?</div></a>
-            <a href="{% url "account:register" %}"><div class="p-2">Register</div></a>
+            <a href="{% url 'account:password_reset' %}"><div class="p-2">Забыли пароль?</div></a>
+            <a href="{% url "account:register" %}"><div class="p-2">Регистрация</div></a>
           </div>
         </form>
       </div>

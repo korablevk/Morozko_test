@@ -31,16 +31,17 @@
             <div class="col-md-6">
                 <div class="row mb-5">
                     <div class="col-md-6">
-                        <a href="{% url 'products:shop' %}" class="btn btn-outline-black btn-sm btn-block">Continue Shopping</a>
+                        <a href="{% url 'products:shop' %}" class="btn btn-outline-black btn-sm btn-block">Продолжить покупки</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label class="text-black h4" for="coupon">Coupon</label>
-                        <p>Enter your coupon code if you have one.</p>
+                        <label class="text-black h4" for="coupon">Купон</label>
+                        <p>Введите код купона, если он у вас есть.</p>
                         <div class="d-flex">
                             <input type="text" class="form-control py-3 me-2" id="coupon" placeholder="Coupon Code">
-                            <button class="btn btn-black">Apply Coupon</button>
+                            <button class="btn btn-black">
+                                Применить купон</button>
                         </div>
                     </div>
                 </div>
@@ -49,7 +50,7 @@
                 <div class="row justify-content-end">
                     <div class="col-md-7">
                         <div class="border-bottom mb-5">
-                            <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                            <h3 class="text-black h4 text-uppercase">Итоговая корзина</h3>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -64,12 +65,12 @@
                                 <span class="text-black">На сумму:</span>
                             </div>
                             <div class="col-md-6 text-right">
-                                <strong class="text-black" id="total">${{ cart.total_price }}</strong>
+                                <strong class="text-black" id="total">₽{{ cart.total_price }}</strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <a href="{% url "order:create_order" %}" class="btn btn-black btn-lg py-3 btn-block">Proceed To Checkout</a>
+                                <a href="{% url "order:create_order" %}" class="btn btn-black btn-lg py-3 btn-block">Перейти к оформлению заказа</a>
                             </div>
                         </div>
                     </div>

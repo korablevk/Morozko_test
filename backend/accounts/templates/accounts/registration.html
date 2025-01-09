@@ -10,7 +10,7 @@
 <div class="container">
     <div class="login-container">
       <div class="login-box">
-        <h2>Register</h2>
+        <h2>Регистрация</h2>
         <form method="post">
             {% csrf_token %}
             {{ form|crispy }}
@@ -19,7 +19,7 @@
             </div>
         </form>
           <div class="text-center mt-3">
-            <a href="{% url "account:login" %}">Already have an account? Login</a>
+            <a href="{% url "account:login" %}">Уже есть аккунт? Зайти</a>
           </div>
         </form>
       </div>

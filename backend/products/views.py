@@ -8,7 +8,7 @@ from .models import Category, ProductProxy
 class ProductListView(ListView):
     model = ProductProxy
     context_object_name = "products"
-    paginate_by = 4
+    paginate_by = 8
     slug_url_kwarg = "category_slug"
 
     def get_template_names(self):

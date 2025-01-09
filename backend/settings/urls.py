@@ -28,7 +28,7 @@ urlpatterns = [
     path('cart/', include('cart.urls', namespace='cart')),
     path('order/', include('orders.urls', namespace='order')),
     path('account/', include('accounts.urls', namespace='account')),
-    path('blog/', include('blog.urls'), name='blog'),
+    # path('blog/', include('blog.urls'), name='blog'),
     path('email/', include(email_urls), name='email-verification'),
 ]
 

@@ -58,12 +58,12 @@
 {% block content %}
 <div class="container profile-container">
     <div class="profile-box">
-        <h2>Update Profile</h2>
+        <h2>Ваш профиль</h2>
         <form method="post">
             {% csrf_token %}
             {{ form|crispy }}
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                <button type="submit" class="btn btn-primary w-100">Сохранить изменения</button>
             </div>
         </form>
     </div>

@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     #     return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
 
-    model_config = SettingsConfigDict(env_file="..env") #, env_prefix="TEST_" if os.getenv("MODE") == "TEST" else ""
+    model_config = SettingsConfigDict(env_file=".env") #, env_prefix="TEST_" if os.getenv("MODE") == "TEST" else ""
 
 
 settings = Settings()
