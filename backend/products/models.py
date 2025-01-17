@@ -120,6 +120,27 @@ class Product(models.Model):
         """
         return self.image.url if self.image else ''
 
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="images",
+        verbose_name="Продукт"
+    )
+    image = models.ImageField(
+        "Изображение",
+        upload_to="images/product_gallery/",
+        blank=True
+    )
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Изображение продукта"
+        verbose_name_plural = "Изображения продуктов"
+
+    def __str__(self):
+        return f"Изображение для {self.product.title}"
+
 
 class ProductManager(models.Manager):
     def get_queryset(self):

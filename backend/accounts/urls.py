@@ -11,14 +11,11 @@ urlpatterns = [
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('logout/', logout, name='logout'),
 
-    #Registration and verification
-
     path('register/', UserRegistrationView.as_view(), name='register'),
     path('email-verification-sent/',
      lambda request: render(request, 'accounts/email/email-verification-sent.html'), 
      name='email_verification_sent'),
 
-    # Password reset
     path('password-reset/', auth_views.PasswordResetView.as_view(
         template_name='accounts/password/password-reset.html',
         email_template_name='accounts/password/password_reset_email.html',

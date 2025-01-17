@@ -4,16 +4,16 @@
 {% block content %}
 <div class="container text-center mt-5">
     <div class="card p-4">
-        <h2 class="card-title">Email Verification Sent</h2>
+        <h2 class="card-title">Письмо для подтверждения отправлено</h2>
         <p class="card-text mt-3">
-            Thank you for registering! A verification email has been sent to your email address. 
-            Please check your inbox and click on the verification link to activate your account.
+            Спасибо за регистрацию! Письмо с подтверждением было отправлено на ваш адрес электронной почты.
+            Пожалуйста, проверьте свой почтовый ящик и перейдите по ссылке в письме, чтобы активировать ваш аккаунт.
         </p>
         <p class="mt-3">
-            Didn't receive the email? Check your spam folder or 
-            <a href="#">click here</a> to resend the verification email.
+            Не получили письмо? Проверьте папку со спамом или 
+            <a href="#">нажмите здесь</a>, чтобы отправить письмо с подтверждением повторно.
         </p>
-        <a href="{% url "products:shop" %}" class="btn btn-primary mt-4">Back to Home</a>
+        <a href="{% url 'products:shop' %}" class="btn btn-primary mt-4">Назад на главную</a>
     </div>
 </div>
 {% endblock %}

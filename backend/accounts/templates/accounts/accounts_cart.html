@@ -34,17 +34,17 @@
                         <a href="{% url 'products:shop' %}" class="btn btn-outline-black btn-sm btn-block">Продолжить покупки</a>
                     </div>
                 </div>
-                <div class="row">
+                {% comment %} <div class="row">
                     <div class="col-md-12">
                         <label class="text-black h4" for="coupon">Купон</label>
                         <p>Введите код купона, если он у вас есть.</p>
                         <div class="d-flex">
-                            <input type="text" class="form-control py-3 me-2" id="coupon" placeholder="Coupon Code">
+                            <input type="text" class="form-control py-3 me-2" id="coupon" placeholder="Купон">
                             <button class="btn btn-black">
                                 Применить купон</button>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
             <div class="col-md-6 pl-5">
                 <div class="row justify-content-end">

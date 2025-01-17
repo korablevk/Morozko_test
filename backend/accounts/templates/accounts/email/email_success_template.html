@@ -13,33 +13,29 @@
 </style>
 
 {% block title %}
-    <title>Email Confirmation</title>
+    <title>Подтверждение электронной почты</title>
 {% endblock title %}
 
 {% block content %}
 
 <div class="container bg-white shadow-md p-3 mt-5">
     <div class="alert alert-success" role="alert">
-        <h4 class="alert-heading">Email Successfully Confirmed</h4>
-        <p>Your email address has been successfully verified. Thank you for registering with us!</p>
-        <p>You will be redirected to the home page in <span id="timer"></span> seconds.</p>
+        <h4 class="alert-heading">Электронная почта успешно подтверждена</h4>
+        <p>Ваш адрес электронной почты был успешно подтвержден. Спасибо за регистрацию!</p>
+        <p>Вы будете перенаправлены на главную страницу через <span id="timer"></span> секунд.</p>
     </div>
 </div>
 
 <script>
-    // Redirect after a countdown
     document.addEventListener("DOMContentLoaded", function () {
-        // Set the initial timer value
         let timerValue = 7;
         const timerElement = document.getElementById("timer");
         timerElement.textContent = timerValue;
 
-        // Start countdown
         const interval = setInterval(() => {
             timerValue--;
             timerElement.textContent = timerValue;
 
-            // When the timer reaches 0, redirect to the home page
             if (timerValue === 0) {
                 clearInterval(interval);
                 window.location.href = '/shop/';

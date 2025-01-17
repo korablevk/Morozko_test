@@ -4,7 +4,22 @@
 {% load mathfilters %}
 
 {% block css %}
-<!-- Add custom styles if necessary -->
+<style>
+    .alert-container {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050;
+        width: 80%;
+        max-width: 400px;
+    }
+
+    .alert-container .alert {
+        margin-bottom: 5px;
+    }
+</style>
+
 {% endblock %}
 
 {% block content %}
@@ -22,7 +37,7 @@
             <div class="col-md-6">
                 <div class="row mb-5">
                     <div class="col-md-6">
-                        <a href="{% url 'products:shop' %}" class="btn btn-outline-black btn-sm btn-block">Continue Shopping</a>
+                        <a href="{% url 'products:shop' %}" class="btn btn-outline-black btn-sm btn-block">Продолжить покупки</a>
                     </div>
                 </div>
             </div>
@@ -30,7 +45,7 @@
                 <div class="row justify-content-end">
                     <div class="col-md-7">
                         <div class="border-bottom mb-5">
-                            <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                            <h3 class="text-black h4 text-uppercase">Итоговая корзина</h3>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -53,6 +68,14 @@
             </div>
         </div>
         </div>
+
+        {% if messages.error %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} fade show" role="alert">
+            <strong>{% if message.tags == 'error' %}Ошибка:{% endif %} </strong>{{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>        
+        {% endif %}
+
 
         <!-- Детали заказа -->
         <div class="container mt-5">
@@ -88,7 +111,7 @@
                                 <label for="id_phone_number" class="form-label">Номер телефона*:</label>
                                 <input type="text" class="form-control" id="id_phone_number" name="phone_number"
                                     value="{% if form.phone_number.value %}{{ form.phone_number.value }}{% endif %}"
-                                    placeholder="(000) 000-0000" required>
+                                    placeholder="+7 999 999 99 99" required>
                                 {% if form.phone_number.errors %}
                                     <div class="alert alert-danger alert-dismissible fade show">
                                         {{ form.phone_number.errors }}
@@ -131,7 +154,7 @@
                                 <label class="form-label">Способ оплаты:</label>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="payment_on_get"
-                                        id="id_payment_on_get_0" value="0">
+                                        id="id_payment_on_get_1" value="1" checked>
                                     <label class="form-check-label" for="id_payment_on_get_1">Оплата при получении</label>
                                 </div>
                                 {% if form.payment_on_get.errors %}
@@ -148,6 +171,95 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('create_order_form').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Отключаем стандартное поведение отправки формы
+    
+        const form = event.target;
+        const formData = new FormData(form);
+        const csrfToken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+    
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                },
+                body: formData,
+            });
+    
+            const result = await response.json();
+    
+            if (result.status === 'error') {
+                // Раскодируем сообщение об ошибке
+                const errorMessage = JSON.parse(result.message).join("<br>");
+                showMessage(errorMessage, 'danger'); 
+            } else if (result.status === 'success') {
+                showMessage(result.message, 'success'); 
+                setTimeout(() => {
+                    window.location.href = '/account/users-cart'; 
+                }, 3000);
+            }
+        } catch (error) {
+            console.error('Ошибка при отправке формы:', error);
+            showMessage('Произошла ошибка. Попробуйте позже. Возможно товара нет на складе', 'danger');
+        }
+    });
+    
+    function showMessage(message, type) {
+        let container = document.querySelector('.alert-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'alert-container';
+            document.body.appendChild(container);
+        }
+    
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.role = 'alert';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        container.appendChild(alert);
+    
+        setTimeout(() => {
+            alert.remove();
+            if (container.children.length === 0) {
+                container.remove();
+            }
+        }, 5000);
+    }
+    
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const requiresDeliveryRadios = document.querySelectorAll('input[name="requires_delivery"]');
+        const deliveryAddressField = document.getElementById('id_delivery_address').closest('.mb-3');
+        const zipCodeField = document.getElementById('id_zip_code').closest('.mb-3');
+    
+        function toggleDeliveryFields() {
+            const requiresDelivery = document.querySelector('input[name="requires_delivery"]:checked').value === '1';
+            if (requiresDelivery) {
+                deliveryAddressField.style.display = 'block';
+                zipCodeField.style.display = 'block';
+            } else {
+                deliveryAddressField.style.display = 'none';
+                zipCodeField.style.display = 'none';
+            }
+        }
+    
+        // Инициализация при загрузке страницы
+        toggleDeliveryFields();
+    
+        // Обработчик изменения радиокнопок
+        requiresDeliveryRadios.forEach(radio => {
+            radio.addEventListener('change', toggleDeliveryFields);
+        });
+    });
+    
+</script>
+
 {% endblock %}
 
 {% block footer %}

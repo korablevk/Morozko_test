@@ -26,25 +26,24 @@ class UserLoginView(LoginView):
         return reverse_lazy('main:index')
 
     def form_valid(self, form):
-        # When the form is valid, the user is logged in.
-        # You can customize the redirect URL if necessary.
+
         session_key = self.request.session.session_key
         user = form.get_user()
 
         if user:
             auth.login(self.request, user)
             if session_key:
-                # delete old authorized user carts
+
                 forgot_carts = Cart.objects.filter(user=user)
                 if forgot_carts.exists():
                     forgot_carts.delete()
-                # add new authorized user carts from anonimous session
+
                 Cart.objects.filter(session_key=session_key).update(user=user)
                 messages.success(self.request, "Successfully logged in!")
                 return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
-        # When the form is invalid (invalid username or password)
+
         messages.error(self.request, 'Username or Password is incorrect')
         return self.render_to_response(self.get_context_data(form=form))
 

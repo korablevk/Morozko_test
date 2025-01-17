@@ -161,7 +161,6 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
-
 def email_verified_callback(user):
     user.is_active = True
 
@@ -199,3 +198,11 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
 # Debug email during development (logs emails to the console instead of sending them)
 if os.environ.get('DEBUG', 'True').lower() == 'true':  
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+#Celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_EXTENDED = True
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'

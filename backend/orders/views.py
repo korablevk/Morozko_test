@@ -9,15 +9,15 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from cart.models import Cart
-
 from orders.forms import CreateOrderForm
 from orders.models import Order, OrderItem
+from orders.tasks import send_order_confirmation
 
 
 class CreateOrderView(LoginRequiredMixin, FormView):
     template_name = 'orders/create_order.html'
     form_class = CreateOrderForm
-    success_url = reverse_lazy('accounts:login')
+    success_url = reverse_lazy('account:users-cart')
 
     def get_initial(self):
         initial = super().get_initial()
@@ -30,18 +30,29 @@ class CreateOrderView(LoginRequiredMixin, FormView):
             with transaction.atomic():
                 user = self.request.user
                 cart_items = Cart.objects.filter(user=user)
-                payment_type = self.request.POST.get('payment_type')
-                total_price = cart_items.total_price()
+                payment_type = form.cleaned_data.get('payment_on_get')
+                requires_delivery = form.cleaned_data['requires_delivery'] == "1"
+                delivery_address = form.cleaned_data['delivery_address']
+
+                if form.cleaned_data.get('coupon_code'):
+                    coupon = form.cleaned_data['coupon_code']
+                    order.apply_coupon(coupon)
+                    order.save()
 
                 if not cart_items.exists():
-                    return JsonResponse({'status': 'error', 'message': 'Корзина пуста.'}, status=400)
+                    return JsonResponse({'status': 'error', 'message': 'Корзина пуста!'}, status=400)
 
+                if requires_delivery and not delivery_address:
+                    return JsonResponse({'status': 'error', 'message': 'Адрес доставки обязателен, если выбрана доставка.'}, status=400)
+
+                if payment_type is None:
+                    return JsonResponse({'status': 'error', 'message': 'Выберите способ оплаты!'}, status=400)
 
                 order = Order.objects.create(
                     user=user,
                     phone_number=form.cleaned_data['phone_number'],
-                    requires_delivery=form.cleaned_data['requires_delivery'],
-                    delivery_address=form.cleaned_data['delivery_address'],
+                    requires_delivery=requires_delivery,
+                    delivery_address=delivery_address,
                     payment_on_get=(payment_type == "1"),
                     zip_code=form.cleaned_data['zip_code'],
                 )
@@ -53,8 +64,8 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                     quantity = cart_item.quantity
 
                     if product.quantity < quantity:
-                        raise ValidationError(f'Недостаточное количество товара "{name}" на складе. '
-                                              f'В наличии: {product.quantity} шт.')
+                        return JsonResponse({'status': 'error', 'message': f'Недостаточное количество товара "{name}" на складе. В наличии: {product.quantity} шт.'}, status=400)
+                        #raise ValidationError(f'Недостаточное количество товара "{name}" на складе. В наличии: {product.quantity} шт.')
 
                     OrderItem.objects.create(
                         order=order,
@@ -67,20 +78,18 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                     product.quantity -= quantity
                     product.save()
 
+                send_order_confirmation.delay(order.id)
 
-                messages.success(self.request, 'Заказ оформлен! Ожидайте доставку.')
                 cart_items.delete()
-                return redirect('account:users_cart')
 
+                messages.success(self.request, 'Заказ оформлен!')
+                return JsonResponse({'status': 'success', 'message': 'Заказ успешно оформлен.'}, status=200)
 
         except ValidationError as e:
-            if order:
-                order.delete()
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': f'Произошла ошибка при оформлении заказа. {e}'}, status=400)
+            return JsonResponse({'status': 'error', 'message': f'Произошла ошибка: {str(e)}'}, status=500)
 
     def form_invalid(self, form):
-        print(f"Form validation errors: {form.errors}") 
-        messages.error(self.request, 'Заполните все обязательные поля!')
-        return redirect('orders:create_order')
+        print(f"Form validation errors: {form.errors}")
+        return JsonResponse({'status': 'error', 'message': 'Заполните все обязательные поля!'}, status=400)
